@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# Backup the original configuration file
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
+
+# Replace the Protocol line with version 2
+sed -i 's/^Protocol.*/Protocol 2/g' /etc/ssh/sshd_config
+
+# Replace the IgnoreRhosts line with 'yes'
+sed -i 's/^IgnoreRhosts.*/IgnoreRhosts yes/g' /etc/ssh/sshd_config
+
+# Replace the LogLevel line with 'INFO'
+sed -i 's/^LogLevel.*/LogLevel INFO/g' /etc/ssh/sshd_config
+
+# Replace the MaxAuthTries line with 6
+sed -i 's/^MaxAuthTries.*/MaxAuthTries 6/g' /etc/ssh/sshd_config
+
+# Specify allowed users
+echo "AllowUsers user1 user2 user3" >> /etc/ssh/sshd_config
+
+# Specify allowed groups
+echo "AllowGroups group1 group2 group3" >> /etc/ssh/sshd_config
+
+# Specify denied users
+echo "DenyUsers user4 user5 user6" >> /etc/ssh/sshd_config
+
+# Specify denied groups
+echo "DenyGroups group4 group5 group6" >> /etc/ssh/sshd_config
+
+# Replace the RhostsRSAAuthentication line with 'no'
+sed -i 's/^RhostsRSAAuthentication.*/RhostsRSAAuthentication no/g' 
+/etc/ssh/sshd_config
+
+# Replace the HostbasedAuthentication line with 'no'
+sed -i 's/^HostbasedAuthentication.*/HostbasedAuthentication no/g' 
+/etc/ssh/sshd_config
+
+# Replace the PermitRootLogin line with 'no'
+sed -i 's/^PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
+
+# Replace the PermitEmptyPasswords line with 'no'
+sed -i 's/^PermitEmptyPasswords.*/PermitEmptyPasswords no/g' 
+/etc/ssh/sshd_config
+
+# Ensure SSH LoginGraceTime is set to one minute or less
+sed -i 's/^LoginGraceTime.*/LoginGraceTime 60/g' /etc/ssh/sshd_config
+
+# Ensure SSH Idle Timeout Interval is configured
+echo "ClientAliveInterval 300" >> /etc/ssh/sshd_config
+echo "ClientAliveCountMax 0" >> /etc/ssh/sshd_config
+
+# Restart the ssh service to apply changes
+systemctl restart ssh
